@@ -1,4 +1,4 @@
-package com.example.mathapp.ui.Screen
+package com.example.mathapp.ui.Screen.signUp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,18 +43,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.mathapp.R
 
 @Composable
 fun SignUpScreen(
+    openAndPopUp: (String,String) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var email = viewModel.email.collectAsState()
+    var password = viewModel.password.collectAsState()
+    var username = viewModel.username.collectAsState()
+    var confirmPassword = viewModel.confirmPassword.collectAsState()
 
 
     Scaffold (
@@ -107,8 +111,8 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                    value = username,
-                    onValueChange = { username = it },
+                    value = username.value,
+                    onValueChange = { viewModel.updateUsername(it) },
                     label = { Text(text = "Username") },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
                     shape = RoundedCornerShape(12.dp)
@@ -118,8 +122,8 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                    value = email,
-                    onValueChange = { email = it },
+                    value = email.value,
+                    onValueChange = { viewModel.updateEmail(it) },
                     label = { Text(text = "Email") },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                     shape = RoundedCornerShape(12.dp)
@@ -131,8 +135,8 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                    value = password,
-                    onValueChange = { password = it },
+                    value = password.value,
+                    onValueChange = { viewModel.updatePassword(it) },
                     label = { Text(text = "Password") },
                     visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
@@ -153,8 +157,8 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
+                    value = confirmPassword.value,
+                    onValueChange = { viewModel.updateConfirmPassword(it) },
                     label = { Text(text = "Confirm password") },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
                     trailingIcon = {
@@ -180,7 +184,7 @@ fun SignUpScreen(
             ) {
                 // Register Button
                 Button(
-                    onClick = { },
+                    onClick = {viewModel.onSignUpClick(openAndPopUp) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -279,5 +283,5 @@ fun SignUpScreen(
 @Composable
 private fun SignUpPreview() {
     val navController: NavHostController = NavHostController(LocalContext.current)
-    SignUpScreen(modifier = Modifier,navController)
+//    SignUpScreen(modifier = Modifier,navController)
 }
