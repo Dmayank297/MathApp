@@ -51,6 +51,7 @@ dependencies {
     //Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-firestore")
     //Life Cycle
     val lifecycle_version = "2.8.7"
 // ViewModel
