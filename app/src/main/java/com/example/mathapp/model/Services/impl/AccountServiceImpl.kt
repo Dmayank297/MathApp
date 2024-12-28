@@ -4,6 +4,7 @@ import com.example.mathapp.model.Services.AccountService
 import com.example.mathapp.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override val currentUser: Flow<User?>
         get() = callbackFlow {
+            //Listener to check each time user authentication changes or not
             val listener = FirebaseAuth.AuthStateListener { auth ->
                 this.trySend(auth.currentUser?.let { User(it.uid) })
             }
@@ -43,5 +45,16 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override suspend fun deleteAccount() {
         Firebase.auth.currentUser!!.delete().await()
+    }
+
+     override suspend fun signInWithGoogle(idToken: String) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        Firebase.auth.signInWithCredential(firebaseCredential).await()
+    }
+
+    override suspend fun linkAccountWithGoogle(idToken: String) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken,null)
+        Firebase.auth.currentUser!!.linkWithCredential(firebaseCredential).await()
+
     }
 }
