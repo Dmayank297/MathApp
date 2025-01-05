@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MathApp</string>
+    <string name="default_web_client_id">673479203290-055qp9ptncucbfl4odiimdupp5s22234.apps.googleusercontent.com</string>
+
 </resources>
